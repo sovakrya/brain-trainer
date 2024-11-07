@@ -39,13 +39,16 @@ import IconCross from './icons/IconCross.vue'
   background: none;
   border-radius: 4px;
   box-shadow: 2px 2px 5px rgb(206, 206, 206);
+  transition: all 0.3s;
+}
+.header-cancellation-btn:hover {
+  background-color: rgba(206, 206, 206, 0.596);
 }
 
 .timer-wrapper {
   position: relative;
-
   background-color: rgb(183, 204, 243);
-  border-radius: 2px;
+  border-radius: 4px;
   width: 110px;
   height: 50px;
 }
@@ -53,6 +56,7 @@ import IconCross from './icons/IconCross.vue'
 .timer-box {
   position: absolute;
   background-color: rgb(238, 238, 238);
+  border-radius: 4px;
   width: 80px;
   left: 2px;
   bottom: 3px;
