@@ -48,7 +48,7 @@ const complexityGame = ref(1)
       </div>
     </div>
 
-    <button class="settings-play-btn">Play!</button>
+    <button class="settings-play-btn" @click="$router.push({ name: 'game' })">Play!</button>
   </div>
 </template>
 
