@@ -36,7 +36,7 @@ function createExample() {
     }
   }
   resultExample = countExample(example)
-
+  localStorage.setItem('result', JSON.stringify(resultExample))
   localStorage.setItem('example', JSON.stringify(example))
   console.log(example, resultExample, userExample)
 }

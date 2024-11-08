@@ -3,8 +3,19 @@ import { ref, watch } from 'vue'
 
 const durationGame = ref(1)
 const complexityGame = ref(1)
-
 const signs = ref<Array<'+' | '-' | '*' | '/' | '^'>>([])
+
+if (localStorage.getItem('duration')) {
+  durationGame.value = JSON.parse(localStorage.getItem('duration')!)
+}
+
+if (localStorage.getItem('complexity')) {
+  complexityGame.value = JSON.parse(localStorage.getItem('complexity')!)
+}
+
+if (localStorage.getItem('signs')) {
+  signs.value = JSON.parse(localStorage.getItem('signs')!)
+}
 
 watch(signs, (newSigns) => {
   localStorage.setItem('signs', JSON.stringify(newSigns))
