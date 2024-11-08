@@ -15,7 +15,14 @@ const modal = ref(false)
 const hint = ref(false)
 const errorInput = ref(false)
 
-createExample()
+if (localStorage.getItem('example')) {
+  console.log(JSON.parse(localStorage.getItem('userExample')!))
+  example.value = JSON.parse(localStorage.getItem('example')!)
+  userExample.value = JSON.parse(localStorage.getItem('userExample')!)
+  resultExample.value = JSON.parse(localStorage.getItem('result')!)
+} else {
+  createExample()
+}
 
 function createExample() {
   if (example.value.length) {
@@ -43,9 +50,10 @@ function createExample() {
       continue
     }
   }
+  localStorage.setItem('example', JSON.stringify(example.value))
+  localStorage.setItem('userExample', JSON.stringify(userExample.value))
   resultExample.value = countExample(example.value)
   localStorage.setItem('result', JSON.stringify(resultExample.value))
-  localStorage.setItem('example', JSON.stringify(example.value))
 }
 
 function countExample(example: Array<number | string>) {
@@ -79,7 +87,7 @@ function closeModal() {
 
 <template>
   <div class="game-main-box">
-    <HeaderGame />
+    <HeaderGame @save-on-cancel="() => {}" />
     <div class="example-box">
       <!-- eslint-disable-next-line vue/require-v-for-key -->
       <div v-for="(component, idx) of userExample">

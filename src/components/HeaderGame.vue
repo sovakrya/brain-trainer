@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import IconCross from './icons/IconCross.vue'
+
+const emits = defineEmits<{
+  saveOnCancel: []
+}>()
 </script>
 
 <template>
@@ -7,7 +11,7 @@ import IconCross from './icons/IconCross.vue'
     <button class="header-cancellation-btn">
       <IconCross />
 
-      <span>отмена</span>
+      <span @click="emits('saveOnCancel')">отмена</span>
     </button>
 
     <div class="timer-wrapper">
