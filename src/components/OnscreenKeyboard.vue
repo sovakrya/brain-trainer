@@ -1,4 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue'
+import ModalCheckResult from './ModalCheckResult.vue'
+
+const modal = ref(false)
+</script>
 
 <template>
   <div class="keyboard-main-box">
@@ -24,7 +29,8 @@
       <div class="keyboard-button keyboard-button-action">&lt;</div>
       <div class="keyboard-button keyboard-button-action">&gt;</div>
       <div class="keyboard-button keyboard-button-action">?</div>
-      <div class="keyboard-button keyboard-button-action">=</div>
+      <div class="keyboard-button keyboard-button-action" @click="modal = true">=</div>
+      <ModalCheckResult v-model:show="modal" />
     </div>
   </div>
 </template>
