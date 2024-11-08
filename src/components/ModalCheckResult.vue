@@ -7,11 +7,16 @@ onMounted(() => {
   if (!modalCheckResult.value) {
     return
   }
-  modalCheckResult.value?.addEventListener('click', closeOnBackDropClick)
 })
 
 const emits = defineEmits<{
   closeModal: []
+}>()
+
+const props = defineProps<{
+  example: Array<number | string>
+  result: number
+  isRight: boolean
 }>()
 
 function closeOnBackDropClick({ currentTarget, target }: MouseEvent) {
@@ -45,25 +50,21 @@ function closeDialog() {
   modalCheckResult.value.close()
   show.value = false
 }
-
-const isRight = ref(false)
-const example = ref<Array<string | number>>(JSON.parse(localStorage.getItem('example')!))
-const result = ref<number>(JSON.parse(localStorage.getItem('result')!))
 </script>
 
 <template>
-  <dialog ref="modalCheckResult" class="modal-wrapper">
+  <dialog ref="modalCheckResult" class="modal-wrapper" @click="closeOnBackDropClick">
     <div class="modal-box">
       <div class="modal-content-box">
-        <h1 v-if="isRight">Правильно!</h1>
+        <h1 v-if="props.isRight">Правильно!</h1>
         <h1 v-else>Неправильно!</h1>
         <span style="text-align: center">Можно было решить так:</span>
         <div class="modal-example-box">
-          <div v-for="component of example">
+          <div v-for="component of props.example">
             <span>{{ component }}</span>
           </div>
           <span>=</span>
-          <span>{{ result }}</span>
+          <span>{{ props.result }}</span>
         </div>
       </div>
 
