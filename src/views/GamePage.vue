@@ -15,7 +15,7 @@ onMounted(() => {
 })
 
 function createExample() {
-  for (let i = 0; i < Number(complexity) * 2 - 1; i++) {
+  for (let i = 0; i < Number(complexity) * 2 + 1; i++) {
     if (i === 0) {
       const num = Math.round(Math.random() * 50)
       example.push(num)
