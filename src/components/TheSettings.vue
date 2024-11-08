@@ -1,10 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const durationGame = ref(1)
 const complexityGame = ref(1)
 
 const signs = ref<Array<'+' | '-' | '*' | '/' | '^'>>([])
+
+watch(signs, (newSigns) => {
+  localStorage.setItem('signs', JSON.stringify(newSigns))
+})
+
+watch(durationGame, (newDuration) => {
+  localStorage.setItem('duration', JSON.stringify(newDuration))
+})
+
+watch(complexityGame, (newComplexity) => {
+  localStorage.setItem('complexity', JSON.stringify(newComplexity))
+})
 </script>
 
 <template>
