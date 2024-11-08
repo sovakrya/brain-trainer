@@ -1,72 +1,10 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
 const durationGame = ref(1)
 const complexityGame = ref(1)
 
-const operations = ref({
-  addition: false,
-  subtraction: false,
-  multiplication: false,
-  division: false,
-  exponentiation: false,
-})
-
 const signs = ref<Array<'+' | '-' | '*' | '/' | '^'>>([])
-
-watch(
-  operations.value,
-  (newOp) => {
-    if (newOp.addition) {
-      signs.value.push('+')
-      console.log(signs.value)
-      return
-    } else {
-      const idx = signs.value.findIndex((operation) => operation === '+')
-      signs.value.splice(idx, 1)
-      console.log(signs.value)
-    }
-
-    if (newOp.division) {
-      signs.value.push('/')
-      console.log(signs.value)
-      return
-    } else {
-      const idx = signs.value.findIndex((operation) => operation === '/')
-      signs.value.splice(idx, 1)
-      console.log(signs.value)
-    }
-
-    if (newOp.subtraction) {
-      signs.value.push('-')
-      console.log(signs.value)
-      return
-    } else {
-      const idx = signs.value.findIndex((operation) => operation === '-')
-      signs.value.splice(idx, 1)
-      console.log(signs.value)
-    }
-    if (newOp.multiplication) {
-      signs.value.push('*')
-      console.log(signs.value)
-      return
-    } else {
-      const idx = signs.value.findIndex((operation) => operation === '*')
-      signs.value.splice(idx, 1)
-      console.log(signs.value)
-    }
-    if (newOp.exponentiation) {
-      signs.value.push('^')
-      console.log(signs.value)
-      return
-    } else {
-      const idx = signs.value.findIndex((operation) => operation === '^')
-      signs.value.splice(idx, 1)
-      console.log(signs.value)
-    }
-  },
-  { deep: true },
-)
 </script>
 
 <template>
@@ -99,23 +37,23 @@ watch(
 
     <div class="settings-signs-wrapper">
       <div class="settings-signs-box">
-        <input type="checkbox" class="sign-checkbox" v-model="operations.addition" />
+        <input type="checkbox" class="sign-checkbox" value="+" v-model="signs" />
         <span>Суммирование</span>
       </div>
       <div class="settings-signs-box">
-        <input type="checkbox" class="sign-checkbox" v-model="operations.subtraction" />
+        <input type="checkbox" class="sign-checkbox" value="-" v-model="signs" />
         <span>Разность</span>
       </div>
       <div class="settings-signs-box">
-        <input type="checkbox" class="sign-checkbox" v-model="operations.multiplication" />
+        <input type="checkbox" class="sign-checkbox" value="*" v-model="signs" />
         <span>Умножение</span>
       </div>
       <div class="settings-signs-box">
-        <input type="checkbox" class="sign-checkbox" v-model="operations.division" />
+        <input type="checkbox" class="sign-checkbox" value="/" v-model="signs" />
         <span>Деление</span>
       </div>
       <div class="settings-signs-box">
-        <input type="checkbox" class="sign-checkbox" v-model="operations.exponentiation" />
+        <input type="checkbox" class="sign-checkbox" value="^" v-model="signs" />
         <span>Возведение в степень</span>
       </div>
     </div>

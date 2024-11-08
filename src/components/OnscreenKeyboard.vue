@@ -21,8 +21,8 @@
       <div class="keyboard-button keyboard-button-numbers" style="align-self: center">0</div>
     </div>
     <div class="keyboard-actions-box">
-      <div class="keyboard-button keyboard-button-action">←</div>
-      <div class="keyboard-button keyboard-button-action">→</div>
+      <div class="keyboard-button keyboard-button-action">&lt;</div>
+      <div class="keyboard-button keyboard-button-action">&gt;</div>
       <div class="keyboard-button keyboard-button-action">?</div>
       <div class="keyboard-button keyboard-button-action">=</div>
     </div>
