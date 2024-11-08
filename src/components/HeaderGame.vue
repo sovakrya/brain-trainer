@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CountDownTimer from './CountDownTimer.vue'
 import IconCross from './icons/IconCross.vue'
 
 const emits = defineEmits<{
@@ -14,11 +15,7 @@ const emits = defineEmits<{
       <span @click="emits('saveOnCancel')">отмена</span>
     </button>
 
-    <div class="timer-wrapper">
-      <div class="timer-box">
-        <span class="timer-title">таймер</span>
-      </div>
-    </div>
+    <CountDownTimer />
   </div>
 </template>
 
@@ -47,32 +44,5 @@ const emits = defineEmits<{
 }
 .header-cancellation-btn:hover {
   background-color: rgba(206, 206, 206, 0.596);
-}
-
-.timer-wrapper {
-  position: relative;
-  background-color: rgb(183, 204, 243);
-  border-radius: 4px;
-  width: 110px;
-  height: 50px;
-}
-
-.timer-box {
-  position: absolute;
-  background-color: rgb(238, 238, 238);
-  border-radius: 4px;
-  width: 80px;
-  left: 2px;
-  bottom: 3px;
-  height: 45px;
-}
-
-.timer-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  color: rgb(114, 114, 114);
-  font-size: 16px;
 }
 </style>
