@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = defineProps<{
+  maxCountExamples: number
+}>()
+</script>
 
 <template>
   <div class="header-settings-box">
@@ -6,7 +10,7 @@
 
     <div class="header-settings-text-box">
       <span>Добро пожаловать на {{}} тренировачный день,</span>
-      <span>Ваш последний результат - решено {{}} из {{}}</span>
+      <span>Ваш последний результат - решено {{}} из {{props.maxCountExamples}}</span>
       <span>Общая точность {{}}</span>
     </div>
   </div>

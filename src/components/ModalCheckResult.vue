@@ -19,15 +19,6 @@ const props = defineProps<{
   isRight: boolean
 }>()
 
-function closeOnBackDropClick({ currentTarget, target }: MouseEvent) {
-  const dialog = currentTarget as HTMLDialogElement
-  const isClickedOnBackDrop = target === dialog
-  if (isClickedOnBackDrop) {
-    dialog.close()
-    show.value = false
-  }
-}
-
 const show = defineModel<boolean>('show', { default: false })
 watch(show, (show) => {
   if (show) {
@@ -53,13 +44,14 @@ function closeDialog() {
 </script>
 
 <template>
-  <dialog ref="modalCheckResult" class="modal-wrapper" @click="closeOnBackDropClick">
+  <dialog ref="modalCheckResult" class="modal-wrapper">
     <div class="modal-box">
       <div class="modal-content-box">
         <h1 v-if="props.isRight">Правильно!</h1>
         <h1 v-else>Неправильно!</h1>
         <span style="text-align: center">Можно было решить так:</span>
         <div class="modal-example-box">
+          <!-- eslint-disable-next-line vue/require-v-for-key -->
           <div v-for="component of props.example">
             <span>{{ component }}</span>
           </div>
@@ -68,7 +60,7 @@ function closeDialog() {
         </div>
       </div>
 
-      <button @click="emits('closeModal')" class="modal-btn">Ok</button>
+      <button @click="emits('closeModal')" class="modal-btn">Ок</button>
     </div>
   </dialog>
 </template>

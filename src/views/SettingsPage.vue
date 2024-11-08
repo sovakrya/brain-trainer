@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import HeaderSettings from '@/components/HeaderSettings.vue'
 import TheSettings from '@/components/TheSettings.vue'
+import { ref } from 'vue'
+
+const maxCountExamples = ref(25)
 </script>
 
 <template>
   <div class="settings-main-box">
-    <HeaderSettings />
+    <HeaderSettings :max-count-examples="maxCountExamples" />
     <TheSettings />
   </div>
 </template>

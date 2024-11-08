@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import HeaderGame from '@/components/HeaderGame.vue'
 import ModalCheckResult from '@/components/ModalCheckResult.vue'
+import ModalHint from '@/components/ModalHint.vue'
 import { ref } from 'vue'
 
 const signs = JSON.parse(localStorage.getItem('signs')!)
@@ -11,9 +12,17 @@ const resultExample = ref<number>()
 const userExample = ref<Array<number | string | undefined>>([])
 const isRight = ref(false)
 const modal = ref(false)
+const hint = ref(false)
+const errorInput = ref(false)
+
 createExample()
 
 function createExample() {
+  if (example.value.length) {
+    example.value = []
+    userExample.value = []
+  }
+
   for (let i = 0; i < Number(complexity) * 2 + 1; i++) {
     if (i === 0) {
       const num = Math.round(Math.random() * 50)
@@ -44,6 +53,10 @@ function countExample(example: Array<number | string>) {
 }
 
 function checkResult() {
+  if (userExample.value.includes(undefined)) {
+    errorInput.value = true
+    return
+  }
   const res = countExample(userExample.value as Array<number | string>)
 
   if (res === resultExample.value) {
@@ -56,12 +69,19 @@ function checkResult() {
 
   modal.value = true
 }
+
+function closeModal() {
+  createExample()
+
+  modal.value = false
+}
 </script>
 
 <template>
   <div class="game-main-box">
     <HeaderGame />
     <div class="example-box">
+      <!-- eslint-disable-next-line vue/require-v-for-key -->
       <div v-for="(component, idx) of userExample">
         <span v-if="idx === 0">
           {{ component }}
@@ -74,7 +94,14 @@ function checkResult() {
           {{ component }}
         </span>
 
-        <input v-else type="number" v-model.number="userExample[idx]" class="example-input" />
+        <input
+          v-else
+          type="number"
+          v-model.number="userExample[idx]"
+          class="example-input"
+          :class="{ 'example-input-error': errorInput && userExample[idx] === undefined }"
+          @input="errorInput = false"
+        />
       </div>
     </div>
     <span class="example-result-text">= {{ resultExample }}</span>
@@ -101,17 +128,19 @@ function checkResult() {
       <div class="keyboard-actions-box">
         <div class="keyboard-button keyboard-button-action">&lt;</div>
         <div class="keyboard-button keyboard-button-action">&gt;</div>
-        <div class="keyboard-button keyboard-button-action">?</div>
+        <div class="keyboard-button keyboard-button-action" @click="hint = true">?</div>
         <div class="keyboard-button keyboard-button-action" @click="checkResult">=</div>
         <ModalCheckResult
           v-model:show="modal"
           :example="example"
           :result="resultExample!"
           :is-right="isRight"
+          @close-modal="closeModal"
         />
+
+        <ModalHint v-model:show="hint" :example :result="resultExample!" />
       </div>
     </div>
-    />
   </div>
 </template>
 
@@ -149,6 +178,10 @@ function checkResult() {
   color: gray;
 }
 
+.example-input-error {
+  border-bottom: solid 2px rgb(165, 43, 43);
+  background-color: rgba(247, 189, 189, 0.466);
+}
 .keyboard-main-box {
   align-self: center;
   display: flex;
