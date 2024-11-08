@@ -35,30 +35,37 @@ function createExample() {
       continue
     }
   }
-  resultExample = eval(example.join(''))
+  resultExample = countExample(example)
 
   localStorage.setItem('example', JSON.stringify(example))
   console.log(example, resultExample, userExample)
+}
+
+function countExample(example: Array<number | string>) {
+  return eval(example.join(''))
 }
 </script>
 
 <template>
   <div class="game-main-box">
     <HeaderGame />
-    <div>
+    <div class="example-box">
       <div v-for="(component, idx) of userExample">
         <span v-if="idx === 0">
           {{ component }}
         </span>
 
-        <span v-else-if="typeof component === 'string'">
+        <span
+          v-else-if="typeof component === 'string' && component !== ''"
+          class="example-sign-text"
+        >
           {{ component }}
         </span>
 
-        <input type="number" v-else v-model="userExample" />
+        <input v-else type="number" v-model.number="userExample[idx]" class="example-input" />
       </div>
-      <span>= {{ resultExample }}</span>
     </div>
+    <span class="example-result-text">= {{ resultExample }}</span>
     <OnscreenKeyboard />
   </div>
 </template>
@@ -69,5 +76,31 @@ function createExample() {
   gap: 40px;
   flex-direction: column;
   padding: 24px;
+}
+
+.example-box {
+  display: flex;
+  gap: 12px;
+  align-self: center;
+  align-items: center;
+  font-size: 28px;
+}
+
+.example-result-text {
+  align-self: center;
+  font-size: 28px;
+  color: grey;
+}
+
+.example-sign-text {
+  color: grey;
+}
+
+.example-input {
+  border-bottom: solid 2px grey;
+  width: 60px;
+  height: 30px;
+  font-size: 28px;
+  color: gray;
 }
 </style>
