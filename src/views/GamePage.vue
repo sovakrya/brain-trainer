@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HeaderGame from '@/components/HeaderGame.vue'
+import ModalCancelGame from '@/components/ModalCancelGame.vue'
 import ModalCheckResult from '@/components/ModalCheckResult.vue'
 import ModalHint from '@/components/ModalHint.vue'
 import { ref } from 'vue'
@@ -13,13 +14,15 @@ const router = useRouter()
 const example = ref<Array<number | string>>([])
 const resultExample = ref<number>()
 const userExample = ref<Array<number | string | undefined>>([])
-const isRight = ref(false)
-const modal = ref(false)
-const hint = ref(false)
-const errorInput = ref(false)
 const quantityResolvedTasks = ref(0)
 const date = ref()
 const quantityTrainingDays = ref(0)
+
+const isRight = ref(false)
+const modal = ref(false)
+const hint = ref(false)
+const cancelGame = ref(false)
+const errorInput = ref(false)
 
 if (localStorage.getItem('date')) {
   date.value = JSON.parse(JSON.stringify(localStorage.getItem('date')))
@@ -103,6 +106,24 @@ function closeModal() {
 
   modal.value = false
 }
+
+function resetOnTimerIsUp() {
+  cancelGame.value = true
+
+  localStorage.removeItem('duration')
+  localStorage.removeItem('complexity')
+  localStorage.removeItem('example')
+  localStorage.removeItem('result')
+  localStorage.removeItem('signs')
+  localStorage.removeItem('timer')
+  localStorage.removeItem('userExample')
+}
+
+function closeModalCancelGame() {
+  cancelGame.value = false
+
+  router.push({ name: 'settings' })
+}
 </script>
 
 <template>
@@ -170,6 +191,7 @@ function closeModal() {
         />
 
         <ModalHint v-model:show="hint" :example :result="resultExample!" />
+        <ModalCancelGame v-model:show="cancelGame" @close-modal="closeModalCancelGame" />
       </div>
     </div>
   </div>
