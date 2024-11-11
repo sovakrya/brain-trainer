@@ -1,25 +1,38 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const emits = defineEmits<{
   timersIsUp: []
 }>()
 
-const timer = ref(JSON.parse(localStorage.getItem('duration')!) * 60000)
+const timer = ref()
 const interval = ref<number>()
 
-while (timer.value <= 0) {
-  interval.value = setTimeout(() => {
-    timer.value -= 1000
-    localStorage.setItem('timer', JSON.stringify(timer.value))
-  }, 1000)
+if (localStorage.getItem('timer')) {
+  timer.value = JSON.parse(JSON.stringify(localStorage.getItem('timer')))
+} else {
+  timer.value = JSON.parse(localStorage.getItem('duration')!) * 60000
+}
+
+interval.value = setTimeout(() => {
+  timer.value -= 1000
+  localStorage.setItem('timer', JSON.stringify(timer.value))
+}, 1000)
+
+watch(timer, () => {
+  if (timer.value >= 0) {
+    interval.value = setTimeout(() => {
+      timer.value -= 1000
+      localStorage.setItem('timer', JSON.stringify(timer.value))
+    }, 1000)
+  }
 
   if (timer.value <= 0) {
     clearInterval(interval.value)
     emits('timersIsUp')
-    alert('время вышло!')
+    alert('время вышло')
   }
-}
+})
 </script>
 
 <template>
