@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 
 const emits = defineEmits<{
-  timersIsUp: []
+  timerIsUp: []
 }>()
 
 const timer = ref()
@@ -29,7 +29,7 @@ watch(timer, () => {
 
   if (timer.value <= 0) {
     clearInterval(interval.value)
-    emits('timersIsUp')
+    emits('timerIsUp')
     alert('время вышло')
   }
 })

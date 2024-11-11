@@ -3,9 +3,12 @@ import HeaderGame from '@/components/HeaderGame.vue'
 import ModalCheckResult from '@/components/ModalCheckResult.vue'
 import ModalHint from '@/components/ModalHint.vue'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const signs = JSON.parse(localStorage.getItem('signs')!)
 const complexity = JSON.parse(localStorage.getItem('complexity')!)
+
+const router = useRouter()
 
 const example = ref<Array<number | string>>([])
 const resultExample = ref<number>()
@@ -14,6 +17,23 @@ const isRight = ref(false)
 const modal = ref(false)
 const hint = ref(false)
 const errorInput = ref(false)
+const quantityResolvedTasks = ref(0)
+const date = ref()
+const quantityTrainingDays = ref(0)
+
+if (localStorage.getItem('date')) {
+  date.value = JSON.parse(JSON.stringify(localStorage.getItem('date')))
+
+  if (Math.floor(new Date().getTime() - date.value) / (24 * 60 * 60 * 1000) >= 24) {
+    quantityTrainingDays.value += 1
+    localStorage.setItem('quantityTrainingDays', JSON.stringify(quantityTrainingDays.value))
+  }
+} else {
+  date.value = new Date().getTime()
+  quantityTrainingDays.value = 1
+  localStorage.setItem('quantityTrainingDays', JSON.stringify(quantityTrainingDays.value))
+  localStorage.setItem('date', JSON.stringify(date.value))
+}
 
 if (localStorage.getItem('example')) {
   console.log(JSON.parse(localStorage.getItem('userExample')!))
@@ -68,8 +88,8 @@ function checkResult() {
   const res = countExample(userExample.value as Array<number | string>)
 
   if (res === resultExample.value) {
-    console.log(res)
-    console.log(resultExample.value)
+    quantityResolvedTasks.value += 1
+    localStorage.setItem('quantityResolvedTasks', JSON.stringify(quantityResolvedTasks.value))
     isRight.value = true
   } else {
     isRight.value = false
@@ -87,7 +107,10 @@ function closeModal() {
 
 <template>
   <div class="game-main-box">
-    <HeaderGame @save-on-cancel="() => {}" />
+    <HeaderGame
+      @save-on-cancel="router.push({ name: 'settings' })"
+      @reset-on-timer-is-up="resetOnTimerIsUp"
+    />
     <div class="example-box">
       <!-- eslint-disable-next-line vue/require-v-for-key -->
       <div v-for="(component, idx) of userExample">

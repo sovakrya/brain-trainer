@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import HeaderSettings from '@/components/HeaderSettings.vue'
 import TheSettings from '@/components/TheSettings.vue'
-import { ref } from 'vue'
 
-const maxCountExamples = ref(25)
+const maxCountExamples = 25
 </script>
 
 <template>

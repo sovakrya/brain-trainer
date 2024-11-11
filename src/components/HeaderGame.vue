@@ -4,6 +4,7 @@ import IconCross from './icons/IconCross.vue'
 
 const emits = defineEmits<{
   saveOnCancel: []
+  resetOnTimerIsUp: []
 }>()
 </script>
 
@@ -15,7 +16,7 @@ const emits = defineEmits<{
       <span @click="emits('saveOnCancel')">отмена</span>
     </button>
 
-    <CountDownTimer />
+    <CountDownTimer @timer-is-up="emits('resetOnTimerIsUp')" />
   </div>
 </template>
 

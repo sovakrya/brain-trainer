@@ -1,7 +1,24 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 const props = defineProps<{
   maxCountExamples: number
 }>()
+
+const quantityTrainingDays = ref(1)
+const quantityResolvedTasks = ref(0)
+
+if (localStorage.getItem('quantityTrainingDays')) {
+  quantityTrainingDays.value = JSON.parse(
+    JSON.stringify(localStorage.getItem('quantityTrainingDays')),
+  )
+}
+
+if (localStorage.getItem('quantityResolvedTasks')) {
+  quantityResolvedTasks.value = JSON.parse(
+    JSON.stringify(localStorage.getItem('quantityResolvedTasks')),
+  )
+}
 </script>
 
 <template>
@@ -9,9 +26,12 @@ const props = defineProps<{
     <h1>Привет!</h1>
 
     <div class="header-settings-text-box">
-      <span>Добро пожаловать на {{}} тренировачный день,</span>
-      <span>Ваш последний результат - решено {{}} из {{props.maxCountExamples}}</span>
-      <span>Общая точность {{}}</span>
+      <span>Добро пожаловать на {{ quantityTrainingDays }} тренировачный день,</span>
+      <span
+        >Ваш последний результат - решено {{ quantityResolvedTasks }} из
+        {{ props.maxCountExamples }}</span
+      >
+      <span>Общая точность {{ (quantityResolvedTasks / maxCountExamples) * 100 }}%</span>
     </div>
   </div>
 </template>
