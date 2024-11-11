@@ -30,7 +30,6 @@ watch(timer, () => {
   if (timer.value <= 0) {
     clearInterval(interval.value)
     emits('timerIsUp')
-    alert('время вышло')
   }
 })
 </script>

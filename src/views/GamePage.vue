@@ -3,7 +3,7 @@ import HeaderGame from '@/components/HeaderGame.vue'
 import ModalCancelGame from '@/components/ModalCancelGame.vue'
 import ModalCheckResult from '@/components/ModalCheckResult.vue'
 import ModalHint from '@/components/ModalHint.vue'
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import { useRouter } from 'vue-router'
 
 const signs = JSON.parse(localStorage.getItem('signs')!)
@@ -13,7 +13,7 @@ const router = useRouter()
 
 const example = ref<Array<number | string>>([])
 const resultExample = ref<number>()
-const userExample = ref<Array<number | string | undefined>>([])
+const userExample = ref<Array<number | string | undefined | null>>([])
 const quantityResolvedTasks = ref(0)
 const date = ref()
 const quantityTrainingDays = ref(0)
@@ -23,6 +23,8 @@ const modal = ref(false)
 const hint = ref(false)
 const cancelGame = ref(false)
 const errorInput = ref(false)
+
+const exampleElements = useTemplateRef('example-elements')
 
 if (localStorage.getItem('date')) {
   date.value = JSON.parse(JSON.stringify(localStorage.getItem('date')))
@@ -39,7 +41,6 @@ if (localStorage.getItem('date')) {
 }
 
 if (localStorage.getItem('example')) {
-  console.log(JSON.parse(localStorage.getItem('userExample')!))
   example.value = JSON.parse(localStorage.getItem('example')!)
   userExample.value = JSON.parse(localStorage.getItem('userExample')!)
   resultExample.value = JSON.parse(localStorage.getItem('result')!)
@@ -84,8 +85,10 @@ function countExample(example: Array<number | string>) {
 }
 
 function checkResult() {
-  if (userExample.value.includes(undefined)) {
+  console.log(userExample.value)
+  if (userExample.value.includes(undefined) || userExample.value.includes(null)) {
     errorInput.value = true
+    console.log(errorInput.value)
     return
   }
   const res = countExample(userExample.value as Array<number | string>)
@@ -124,6 +127,46 @@ function closeModalCancelGame() {
 
   router.push({ name: 'settings' })
 }
+
+function writeToInput(num: number) {
+  const selectedElIdx = Array.from(exampleElements.value!).findIndex(
+    (val) => val.children[0] === document.activeElement,
+  )
+  if (userExample.value[selectedElIdx]) {
+    userExample.value[selectedElIdx] = Number(
+      String(userExample.value[selectedElIdx]) + String(num),
+    )
+  } else {
+    userExample.value[selectedElIdx] = num
+  }
+}
+
+function focusForward() {
+  const selectedElIdx = Array.from(exampleElements.value!).findIndex(
+    (val) => val.children[0] === document.activeElement,
+  )
+
+  const arrEl = Array.from(exampleElements.value!) as HTMLDivElement[]
+  if (selectedElIdx === arrEl.length - 1 || selectedElIdx === -1) {
+    ;(arrEl[2].children[0] as HTMLInputElement).focus()
+  } else {
+    ;(arrEl[selectedElIdx + 2].children[0] as HTMLInputElement).focus()
+  }
+}
+
+function focusBack() {
+  const selectedElIdx = Array.from(exampleElements.value!).findIndex(
+    (val) => val.children[0] === document.activeElement,
+  )
+
+  const arrEl = Array.from(exampleElements.value!) as HTMLDivElement[]
+
+  if (selectedElIdx === -1 || selectedElIdx === 2) {
+    ;(arrEl[arrEl.length - 1].children[0] as HTMLInputElement).focus()
+  } else {
+    ;(arrEl[selectedElIdx - 2].children[0] as HTMLInputElement).focus()
+  }
+}
 </script>
 
 <template>
@@ -134,7 +177,7 @@ function closeModalCancelGame() {
     />
     <div class="example-box">
       <!-- eslint-disable-next-line vue/require-v-for-key -->
-      <div v-for="(component, idx) of userExample">
+      <div v-for="(component, idx) of userExample" ref="example-elements">
         <span v-if="idx === 0">
           {{ component }}
         </span>
@@ -147,11 +190,27 @@ function closeModalCancelGame() {
         </span>
 
         <input
+          v-else-if="idx === 2"
+          type="number"
+          v-model.number="userExample[idx]"
+          class="example-input"
+          :class="{
+            'example-input-error':
+              errorInput && (userExample[idx] === undefined || userExample[idx] === null),
+          }"
+          @input="errorInput = false"
+          autofocus
+        />
+
+        <input
           v-else
           type="number"
           v-model.number="userExample[idx]"
           class="example-input"
-          :class="{ 'example-input-error': errorInput && userExample[idx] === undefined }"
+          :class="{
+            'example-input-error':
+              errorInput && (userExample[idx] === undefined || userExample[idx] === null),
+          }"
           @input="errorInput = false"
         />
       </div>
@@ -161,27 +220,100 @@ function closeModalCancelGame() {
     <div class="keyboard-main-box">
       <div class="keyboard-numbers-wrapper">
         <div class="keyboard-numbers-box">
-          <div class="keyboard-button keyboard-button-numbers">1</div>
-          <div class="keyboard-button keyboard-button-numbers">2</div>
-          <div class="keyboard-button keyboard-button-numbers">3</div>
+          <button
+            class="keyboard-button keyboard-button-numbers"
+            @mousedown="(e) => e.preventDefault()"
+            @click="writeToInput(1)"
+          >
+            1
+          </button>
+          <button
+            class="keyboard-button keyboard-button-numbers"
+            @mousedown="(e) => e.preventDefault()"
+            @click="writeToInput(2)"
+          >
+            2
+          </button>
+          <button
+            class="keyboard-button keyboard-button-numbers"
+            @mousedown="(e) => e.preventDefault()"
+            @click="writeToInput(3)"
+          >
+            3
+          </button>
         </div>
         <div class="keyboard-numbers-box">
-          <div class="keyboard-button keyboard-button-numbers">4</div>
-          <div class="keyboard-button keyboard-button-numbers">5</div>
-          <div class="keyboard-button keyboard-button-numbers">6</div>
+          <button
+            class="keyboard-button keyboard-button-numbers"
+            @mousedown="(e) => e.preventDefault()"
+            @click="writeToInput(4)"
+          >
+            4
+          </button>
+          <button
+            class="keyboard-button keyboard-button-numbers"
+            @mousedown="(e) => e.preventDefault()"
+            @click="writeToInput(5)"
+          >
+            5
+          </button>
+          <button
+            class="keyboard-button keyboard-button-numbers"
+            @mousedown="(e) => e.preventDefault()"
+            @click="writeToInput(6)"
+          >
+            6
+          </button>
         </div>
         <div class="keyboard-numbers-box">
-          <div class="keyboard-button keyboard-button-numbers">7</div>
-          <div class="keyboard-button keyboard-button-numbers">8</div>
-          <div class="keyboard-button keyboard-button-numbers">9</div>
+          <button
+            class="keyboard-button keyboard-button-numbers"
+            @mousedown="(e) => e.preventDefault()"
+            @click="writeToInput(7)"
+          >
+            7
+          </button>
+          <button
+            class="keyboard-button keyboard-button-numbers"
+            @mousedown="(e) => e.preventDefault()"
+            @click="writeToInput(8)"
+          >
+            8
+          </button>
+          <button
+            class="keyboard-button keyboard-button-numbers"
+            @mousedown="(e) => e.preventDefault()"
+            @click="writeToInput(9)"
+          >
+            9
+          </button>
         </div>
-        <div class="keyboard-button keyboard-button-numbers" style="align-self: center">0</div>
+        <button
+          class="keyboard-button keyboard-button-numbers"
+          style="align-self: center"
+          @mousedown="(e) => e.preventDefault()"
+          @click="writeToInput(0)"
+        >
+          0
+        </button>
       </div>
       <div class="keyboard-actions-box">
-        <div class="keyboard-button keyboard-button-action">&lt;</div>
-        <div class="keyboard-button keyboard-button-action">&gt;</div>
-        <div class="keyboard-button keyboard-button-action" @click="hint = true">?</div>
-        <div class="keyboard-button keyboard-button-action" @click="checkResult">=</div>
+        <button
+          class="keyboard-button keyboard-button-action"
+          @mousedown="(e) => e.preventDefault()"
+          @click="focusBack"
+        >
+          &lt;
+        </button>
+        <button
+          class="keyboard-button keyboard-button-action"
+          @click="focusForward"
+          @mousedown="(e) => e.preventDefault()"
+        >
+          &gt;
+        </button>
+        <button class="keyboard-button keyboard-button-action" @click="hint = true">?</button>
+        <button class="keyboard-button keyboard-button-action" @click="checkResult">=</button>
         <ModalCheckResult
           v-model:show="modal"
           :example="example"

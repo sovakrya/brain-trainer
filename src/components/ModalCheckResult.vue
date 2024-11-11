@@ -89,6 +89,7 @@ function closeDialog() {
   flex-direction: column;
   gap: 12px;
   font-size: 16px;
+  text-align: center;
 }
 
 .modal-example-box {
