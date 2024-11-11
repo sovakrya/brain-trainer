@@ -26,6 +26,12 @@ const errorInput = ref(false)
 
 const exampleElements = useTemplateRef('example-elements')
 
+if (localStorage.getItem('quantityResolvedTasks')) {
+  quantityResolvedTasks.value = Number(
+    JSON.parse(JSON.stringify(localStorage.getItem('quantityResolvedTasks'))),
+  )
+}
+
 if (localStorage.getItem('date')) {
   date.value = JSON.parse(JSON.stringify(localStorage.getItem('date')))
 
@@ -85,10 +91,8 @@ function countExample(example: Array<number | string>) {
 }
 
 function checkResult() {
-  console.log(userExample.value)
   if (userExample.value.includes(undefined) || userExample.value.includes(null)) {
     errorInput.value = true
-    console.log(errorInput.value)
     return
   }
   const res = countExample(userExample.value as Array<number | string>)
